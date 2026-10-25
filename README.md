@@ -1,39 +1,42 @@
-# NOVA — Banking, Reimagined
+# NOVA — The Art of More
 
-An experimental **fictional digital bank** landing page exploring cinematic scroll motion, creative UI and interactive product storytelling. Inspired by the motion-first approach of Oryzo AI, with original branding, design and implementation.
+A fictional premium digital banking concept and cinematic, scroll-directed web experience. Built to explore motion design, interactive UX, and creative front-end engineering.
 
 ## Experience
 
-- Sticky hero with a 3D-transformed card responding to scroll
-- Oversized typography, moving marquee and scroll-linked phone scene
-- Interactive card color customization
-- Switchable banking plans
-- Simulated money transfer with confirmation state
-- Responsive design and reduced-motion CSS support
+- **Cinematic entry:** a full-screen transition when entering the experience
+- **Card reveal:** depth, perspective and scroll-linked flip animation
+- **Intelligent security:** counter-rotating vault and zoom motion
+- **Wealth:** an illustration-only financial dashboard with an animated chart
+- **Worldwide:** a dimensional globe that travels to the center as you scroll
+- **Lifestyle:** three benefit panels with hover, tap and reveal interactions
+- **Mobile banking demo:** an interactive phone with balance visibility, activity history, simulated transfers, demo top-ups and virtual-card freeze/unfreeze
+- **Glass onboarding:** a responsive, animated, multi-path navigation modal
 
-**No real financial services or transactions are offered.** All balances, prices and transfers are fictional.
+## Tech stack
 
-## Stack
+React 19, TypeScript, Vite 6, Motion for React, Lucide, CSS 3D and responsive layouts.
 
-React 19, TypeScript, Vite, Motion, CSS 3D transforms, Lucide icons.
-
-## Run
+## Run locally
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Build
+## Validate and build
 
 ```bash
+npm run typecheck
 npm run build
 ```
 
 ## Deploy
 
-Import this repository into Vercel, choose **Vite**, and use `npm run build` with output directory `dist`.
+Vercel: framework **Vite**, build `npm run build`, output directory `dist`.
 
-## Notes
+## Disclaimer
 
-The repository retains its original URL (`wandr-3d-travel-experience`) for continuity, but the product concept is now NOVA. This is an original motion-inspired interpretation, not an exact reproduction of Oryzo's proprietary animations or assets.
+NOVA is **not a real bank**. All accounts, card details, transaction data, prices and performance values are imaginary and illustrative. Interactive actions do not send data to any banking service or move real money.
+
+This project uses the Oryzo AI website only as a motion/storytelling reference, not as a source of copied proprietary code or assets. Repository URL was retained from an earlier travel concept for continuity.
