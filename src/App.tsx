@@ -1,46 +1,48 @@
 import { useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "motion/react";
-import { ArrowDown, ArrowRight, ArrowUpRight, Check, CreditCard, Globe2, LockKeyhole, Menu, Plus, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowDown, ArrowUpRight, ArrowRight, ShieldCheck, Globe2, TrendingUp, X, Check } from "lucide-react";
 
-const plans = [
- {name:"NOVA",tag:"THE ESSENTIAL",fee:"$0",desc:"Everything you need. Nothing you don't.",features:["Everyday payments","Instant notifications","Virtual card"]},
- {name:"NOVA PLUS",tag:"MORE OF EVERYTHING",fee:"$9",desc:"A little extra, for wherever life takes you.",features:["Everything in NOVA","Travel perks","Priority support"]},
- {name:"NOVA ULTRA",tag:"THE FULL EXPERIENCE",fee:"$19",desc:"For people who never settle for ordinary.",features:["Everything in PLUS","Premium metal card","Exclusive experiences"]}
+const chapters=[
+ {number:"01",label:"THE CARD",title:"AN ICON OF",accent:"POSSIBILITY.",text:"A statement in midnight blue. Crafted for every move you make.",tag:"NOVA SIGNATURE",color:"#06162e"},
+ {number:"02",label:"SECURITY",title:"CONFIDENCE",accent:"IN EVERY MOVE.",text:"Smart protection that moves with you. Security should feel effortless.",tag:"PROTECTED BY DESIGN",color:"#091e37"},
+ {number:"03",label:"WEALTH",title:"MAKE YOUR",accent:"NEXT MOVE.",text:"A clearer perspective on what matters. Your ambitions, in motion.",tag:"GROW ON YOUR TERMS",color:"#0a243c"},
+ {number:"04",label:"WORLDWIDE",title:"THE WORLD",accent:"IS OPEN.",text:"Beyond borders. Beyond ordinary. Built for wherever life leads.",tag:"GO BEYOND BORDERS",color:"#06162e"}
 ];
-function BankCard({variant="purple",small=false}:{variant?:string;small?:boolean}){
- return <div className={`bank-card ${variant} ${small?"bank-card-small":""}`}><div className="card-top"><span>nova<span className="asterisk">✳</span></span><span className="chip">▦</span></div><div className="card-bottom"><span>GOOD THINGS AHEAD.</span><span className="circles"><i/><i/></span></div></div>;
+function SignatureCard(){return <div className="signature-card"><div className="card-sheen"/><div className="card-rings"/><div className="card-top"><span>nova<span className="brand-star">✳</span></span><span className="card-tier">PRIVATE<br/>EDITION</span></div><div className="card-chip"><span>▦</span><span className="contactless">)))</span></div><div className="card-bottom"><span>THE ART OF MORE</span><div className="card-master"><i/><i/></div></div></div>}
+function Story({index}:{index:number}){
+ const ref=useRef<HTMLElement>(null);
+ const {scrollYProgress}=useScroll({target:ref,offset:["start start","end end"]});
+ const progress=useSpring(scrollYProgress,{stiffness:90,damping:26,mass:.6});
+ const rotateY=useTransform(progress,[0,.28,.55,.8,1],[-35,10,175,345,380]);
+ const rotateX=useTransform(progress,[0,.5,1],[14,-12,8]);
+ const scale=useTransform(progress,[0,.3,.6,1],[.7,1.12,1.6,.77]);
+ const x=useTransform(progress,[0,.25,.65,1],["30%","15%","-13%","-28%"]);
+ const y=useTransform(progress,[0,.5,1],["20%","-2%","-12%"]);
+ const textOpacity=useTransform(progress,[0,.15,.43,.7,.92,1],[0,1,1,1,.6,0]);
+ const titleY=useTransform(progress,[0,.2,.8,1],[100,0,0,-80]);
+ const glow=useTransform(progress,[0,.5,1],[.35,1,.4]);
+ const c=chapters[index];
+ return <section className="story" ref={ref} style={{background:c.color}} id={index===0?"experience":undefined}><div className="story-sticky">
+  <motion.div className="ambient-glow" style={{opacity:glow}}/>
+  <div className="story-grid"/><div className="story-vertical">NOVA / PRIVATE BANKING CONCEPT</div>
+  <motion.div className="story-copy" style={{opacity:textOpacity,y:titleY}}><div className="story-index"><span>{c.number} / 04</span><span className="line"/><span>{c.label}</span></div><h2>{c.title}<br/><em>{c.accent}</em></h2><p>{c.text}</p><span className="story-detail"><span className="detail-dot"/> {c.tag}</span></motion.div>
+  <motion.div className="card-scene" style={{x,y,scale,rotateY,rotateX}}><SignatureCard/></motion.div>
+  {index===1&&<motion.div className="floating-symbol symbol-shield" style={{opacity:glow}}><ShieldCheck size={42}/><span>ENCRYPTED<br/>BY DEFAULT</span></motion.div>}
+  {index===2&&<motion.div className="floating-symbol symbol-wealth" style={{opacity:glow}}><TrendingUp size={42}/><span>YOUR FUTURE<br/>IN MOTION</span></motion.div>}
+  {index===3&&<motion.div className="floating-symbol symbol-globe" style={{opacity:glow}}><Globe2 size={42}/><span>NO BORDERS.<br/>NO LIMITS.</span></motion.div>}
+  <div className="story-scroll">SCROLL TO EXPLORE <ArrowDown size={15}/></div><div className="chapter-count">{c.number} — 04</div>
+ </div></section>;
 }
 export default function App(){
- const heroRef=useRef<HTMLElement>(null);
- const storyRef=useRef<HTMLElement>(null);
- const {scrollYProgress:heroProgress}=useScroll({target:heroRef,offset:["start start","end start"]});
- const {scrollYProgress:storyProgress}=useScroll({target:storyRef,offset:["start end","end start"]});
- const smooth=useSpring(heroProgress,{stiffness:90,damping:24});
- const cardRotate=useTransform(smooth,[0,1],[-16,145]);
- const cardY=useTransform(smooth,[0,1],[0,300]);
- const cardScale=useTransform(smooth,[0,1],[1,1.65]);
- const titleY=useTransform(smooth,[0,1],[0,-130]);
- const sceneRotate=useTransform(storyProgress,[0,.5,1],[-32,0,28]);
- const sceneScale=useTransform(storyProgress,[0,.5,1],[.7,1.05,.82]);
- const [active,setActive]=useState(1);
- const [color,setColor]=useState("purple");
- const [menu,setMenu]=useState(false);
- const [showDemo,setShowDemo]=useState(false);
- const [amount,setAmount]=useState("50");
- const [sent,setSent]=useState(false);
- const [copied,setCopied]=useState(false);
- const scrollTo=(id:string)=>{document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setMenu(false)};
- return <main>
- <nav className="nav"><a href="#top" className="brand">nova<span>✳</span></a><div className="nav-links"><a href="#experience">Experience</a><a href="#features">Why NOVA</a><a href="#cards">Cards</a></div><button className="nav-cta" onClick={()=>setShowDemo(true)}>TRY THE DEMO <ArrowUpRight size={17}/></button><button className="mobile-menu" aria-label="Open navigation" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>
- <AnimatePresence>{menu&&<motion.div className="mobile-nav" initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} exit={{opacity:0}}>{[["Experience","experience"],["Why NOVA","features"],["Cards","cards"]].map(([label,id])=><button key={id} onClick={()=>scrollTo(id)}>{label}</button>)}</motion.div>}</AnimatePresence>
- <section className="hero" id="top" ref={heroRef}><div className="hero-sticky"><div className="hero-grain"/><motion.div style={{y:titleY}} className="hero-heading"><span className="eyebrow">A NEW KIND OF MONEY EXPERIENCE <span>↗</span></span><h1>MAKE<br/>MONEY<br/><em>MOVE.</em></h1><p>Money should move with you. Not the other way around.</p><button className="round-link" onClick={()=>scrollTo("experience")}>DISCOVER NOVA <ArrowDown size={19}/></button></motion.div><motion.div className="hero-card-wrap" style={{rotateY:cardRotate,y:cardY,scale:cardScale}}><BankCard/></motion.div><div className="hero-counter">01 / 04 — SCROLL TO EXPLORE</div><div className="hero-star">✳</div></div></section>
- <section className="intro" id="experience"><motion.div initial={{opacity:0,y:70}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.25}} transition={{duration:.7}}><span className="kicker">/ THE NEXT CHAPTER</span><h2>BANKING<br/>WITHOUT THE<br/><span>BOOOORING.</span></h2><p>Forget everything you know about banking. NOVA makes managing money feel effortless, intuitive, and a little more fun.</p></motion.div><div className="marquee" aria-hidden="true"><div>YOUR MONEY. YOUR RULES. ✳ YOUR MONEY. YOUR RULES. ✳ YOUR MONEY. YOUR RULES. ✳&nbsp;</div></div></section>
- <section className="showcase" ref={storyRef} id="features"><div className="showcase-sticky"><div className="showcase-copy"><span className="kicker">/ 01 — BUILT DIFFERENT</span><h2>ALL YOUR<br/>MONEY.<br/><i>ONE PLACE.</i></h2><p>One beautiful space for everything you do with your money. Tap, send, save, repeat.</p><button className="text-link" onClick={()=>setShowDemo(true)}>TRY A TRANSFER <ArrowUpRight size={18}/></button></div><motion.div className="phone-stage" style={{rotateY:sceneRotate,scale:sceneScale}}><div className="phone"><div className="phone-island"/><div className="phone-content"><div className="phone-row"><strong>nova✳</strong><span>◉</span></div><small>TOTAL BALANCE</small><h3>$12,480<span>.50</span></h3><div className="phone-actions"><span>↗<small>Send</small></span><span>＋<small>Add</small></span><span>⇄<small>Exchange</small></span></div><div className="phone-chart"><span>YOUR MONEY, IN MOTION</span><div className="bars">{[34,49,43,68,57,82,72,100,79,91].map((h,i)=><i key={i} style={{height:h+"%"}}/>)}</div></div><div className="phone-activity"><b>Recent activity</b><p>↗ &nbsp; Coffee & friends <span>− $12.00</span></p><p>✳ &nbsp; Monthly savings <span>+ $200.00</span></p></div></div></div><div className="floating-pill">✳ INSTANT. ALWAYS.</div></motion.div></div></section>
- <section className="feature-grid"><article><span>01 / FAST</span><ArrowUpRight/><h3>INSTANT<br/>MEANS INSTANT.</h3><p>Send money in seconds. No waiting, no drama.</p></article><article><span>02 / SAFE</span><ShieldCheck/><h3>YOUR MONEY.<br/>PROTECTED.</h3><p>Smart controls and security built around you.</p></article><article><span>03 / GLOBAL</span><Globe2/><h3>GO BIG.<br/>GO GLOBAL.</h3><p>Made for people who don't stay in one place.</p></article></section>
- <section className="customize" id="cards"><div className="customize-head"><span className="kicker">/ 02 — MAKE IT YOURS</span><h2>YOUR CARD.<br/><em>YOUR ENERGY.</em></h2><p>Choose a look that feels like you. Your money, your personality.</p></div><div className="customize-body"><motion.div key={color} initial={{opacity:0,rotate:-12,scale:.86}} animate={{opacity:1,rotate:-8,scale:1}} transition={{type:"spring",stiffness:140,damping:18}} className="custom-card"><BankCard variant={color}/></motion.div><div className="custom-options"><span>CHOOSE YOUR COLOR</span><div className="swatches">{["purple","lime","orange","dark"].map(c=><button key={c} className={`swatch ${c} ${color===c?"chosen":""}`} aria-label={`Select ${c} card`} aria-pressed={color===c} onClick={()=>setColor(c)} />)}</div><p>Made to stand out.<br/>Designed to go everywhere.</p><button className="outline-btn" onClick={()=>setShowDemo(true)}>EXPLORE YOUR CARD <ArrowUpRight/></button></div></div></section>
- <section className="pricing"><span className="kicker">/ 03 — PICK YOUR PATH</span><h2>MORE LIFE.<br/><i>LESS FEES.</i></h2><div className="plan-tabs">{plans.map((p,i)=><button key={p.name} className={active===i?"selected":""} onClick={()=>setActive(i)}>{p.name}</button>)}</div><AnimatePresence mode="wait"><motion.div key={active} className="plan-detail" initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-15}}><div><span>{plans[active].tag}</span><h3>{plans[active].name}</h3><p>{plans[active].desc}</p></div><div className="plan-price"><strong>{plans[active].fee}</strong><small>/ MONTH · DEMO PRICING</small></div><ul>{plans[active].features.map(f=><li key={f}><Check size={18}/>{f}</li>)}</ul></motion.div></AnimatePresence></section>
- <section className="closing"><span>READY FOR WHAT'S NEXT?</span><h2>GO BEYOND<br/><i>ORDINARY.</i></h2><button onClick={()=>setShowDemo(true)}>EXPLORE NOVA <ArrowUpRight/></button><div className="closing-orb">✳</div></section>
- <footer><span className="brand">nova✳</span><p>A FICTIONAL BANKING CONCEPT. NO REAL ACCOUNTS OR TRANSACTIONS.</p><span>© 2026 NOVA — DESIGN EXPERIMENT</span></footer>
- <AnimatePresence>{showDemo&&<motion.div className="modal-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setShowDemo(false)}><motion.div className="modal" initial={{opacity:0,scale:.92,y:30}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:.95}} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>{setShowDemo(false);setSent(false)}} aria-label="Close"><X/></button><span className="kicker">/ INTERACTIVE DEMO</span><h2>MOVE MONEY.<br/><i>JUST LIKE THAT.</i></h2>{sent?<div className="success"><Check size={40}/><h3>Looking good!</h3><p>Demo transfer of ${Number(amount||0).toFixed(2)} completed. No real money was moved.</p><button className="outline-btn" onClick={()=>setSent(false)}>TRY AGAIN <ArrowRight/></button></div>:<form onSubmit={e=>{e.preventDefault();if(Number(amount)>0)setSent(true)}}><label htmlFor="amount">AMOUNT (USD) — DEMO ONLY</label><div className="amount-field"><span>$</span><input id="amount" type="number" min="0.01" step="0.01" required value={amount} onChange={e=>setAmount(e.target.value)}/></div><div className="demo-recipient"><span>↗</span><div><strong>Alex Morgan</strong><small>Demo recipient</small></div><Check size={19}/></div><button className="submit" type="submit">SEND DEMO TRANSFER <ArrowUpRight/></button></form>}<p className="disclaimer"><LockKeyhole size={13}/> Fictional experience. No banking services are provided.</p></motion.div></motion.div>}</AnimatePresence>
+ const [open,setOpen]=useState(false);
+ const [name,setName]=useState("");
+ const [submitted,setSubmitted]=useState(false);
+ return <main><header className="site-nav"><a className="logo" href="#top">nova<span>✳</span></a><div className="nav-mid"><a href="#experience">THE EXPERIENCE</a><a href="#details">THE DETAILS</a></div><button onClick={()=>setOpen(true)} className="nav-action">EXPLORE NOVA <ArrowUpRight size={16}/></button></header>
+ <section className="opening" id="top"><div className="opening-glow"/><div className="opening-content"><motion.div initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} transition={{duration:.8}} className="opening-eyebrow">INTRODUCING NOVA <span>—</span> A NEW STANDARD</motion.div><motion.h1 initial={{opacity:0,y:70}} animate={{opacity:1,y:0}} transition={{duration:1,delay:.15}}>THE ART<br/>OF <em>MORE.</em></motion.h1><motion.p initial={{opacity:0}} animate={{opacity:1}} transition={{delay:.65}}>Not just a card. A different way to move through the world.</motion.p><a href="#experience" className="opening-scroll">ENTER THE EXPERIENCE <ArrowDown size={18}/></a></div><motion.div className="opening-card" initial={{opacity:0,rotate:-30,y:200}} animate={{opacity:1,rotate:-16,y:0}} transition={{duration:1.4,delay:.35,type:"spring",damping:19}}><SignatureCard/></motion.div><span className="opening-corner">N° 001 / THE PRIVATE EDITION</span></section>
+ {chapters.map((_,index)=><Story key={index} index={index}/>)}
+ <section className="details" id="details"><div className="details-top"><span>05 / THE FINISHING TOUCH</span><span>DESIGNED TO FEEL DIFFERENT</span></div><h2>EVERY DETAIL.<br/><em>INTENTIONAL.</em></h2><div className="details-layout"><div className="details-card"><SignatureCard/></div><div className="details-list"><div><span>01</span><h3>Midnight finish</h3><p>A deep navy surface with a subtle metallic glow.</p></div><div><span>02</span><h3>Quiet confidence</h3><p>Less noise. More of what matters.</p></div><div><span>03</span><h3>Designed for motion</h3><p>Every interaction considered, every detail refined.</p></div><button className="detail-cta" onClick={()=>setOpen(true)}>DISCOVER THE CONCEPT <ArrowUpRight/></button></div></div></section>
+ <section className="finale"><div className="finale-halo"/><span>THE NEXT CHAPTER IS YOURS</span><h2>EXPECT<br/><em>EXTRAORDINARY.</em></h2><button onClick={()=>setOpen(true)}>STEP INTO NOVA <ArrowRight/></button></section>
+ <footer><a className="logo" href="#top">nova<span>✳</span></a><p>FICTIONAL DIGITAL BANK CONCEPT — NO FINANCIAL SERVICES OFFERED.</p><span>© 2026 NOVA / A DESIGN EXPERIMENT</span></footer>
+ <AnimatePresence>{open&&<motion.div className="modal-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setOpen(false)}><motion.div className="modal" initial={{opacity:0,y:35,scale:.96}} animate={{opacity:1,y:0,scale:1}} exit={{opacity:0,y:20}} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>setOpen(false)} aria-label="Close"><X/></button><span>THE NOVA EXPERIENCE</span><h2>BE PART OF<br/><em>WHAT'S NEXT.</em></h2>{submitted?<div className="modal-success"><Check size={36}/><p>Thanks, {name.trim()}! This is a design concept, so no details were submitted or stored.</p><button onClick={()=>{setSubmitted(false);setName("")}}>START AGAIN <ArrowRight size={16}/></button></div>:<form onSubmit={e=>{e.preventDefault();if(name.trim())setSubmitted(true)}}><label htmlFor="demo-name">YOUR FIRST NAME</label><input id="demo-name" value={name} onChange={e=>setName(e.target.value)} placeholder="Your name" required maxLength={40}/><button type="submit">EXPLORE THE DEMO <ArrowUpRight size={17}/></button></form>}<small>INTERACTIVE PORTFOLIO DEMO. NOT A REAL BANK.</small></motion.div></motion.div>}</AnimatePresence>
  </main>;
 }
