@@ -1,38 +1,39 @@
-# WANDR — Go Somewhere Wild ✳
+# NOVA — Banking, Reimagined
 
-A playful, experimental travel discovery concept built with React, TypeScript, React Three Fiber, Three.js and Motion.
+An experimental **fictional digital bank** landing page exploring cinematic scroll motion, creative UI and interactive product storytelling. Inspired by the motion-first approach of Oryzo AI, with original branding, design and implementation.
 
-## Features
+## Experience
 
-- Interactive rotating 3D planet
-- Animated destination cards and mood filters
-- Destination details and a session-based bucket list
-- Responsive layouts and reduced-motion support
+- Sticky hero with a 3D-transformed card responding to scroll
+- Oversized typography, moving marquee and scroll-linked phone scene
+- Interactive card color customization
+- Switchable banking plans
+- Simulated money transfer with confirmation state
+- Responsive design and reduced-motion CSS support
 
-## Run locally
+**No real financial services or transactions are offered.** All balances, prices and transfers are fictional.
+
+## Stack
+
+React 19, TypeScript, Vite, Motion, CSS 3D transforms, Lucide icons.
+
+## Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite.
-
-## Production build
+## Build
 
 ```bash
 npm run build
-npm run preview
 ```
 
-## Project status
+## Deploy
 
-Early prototype. The planet is stylized rather than a geographic globe; destinations are curated examples, and saved destinations are currently kept in React state (not persisted between page reloads). Images are loaded from Unsplash URLs and require internet access. This repository is source code, not a deployed website.
+Import this repository into Vercel, choose **Vite**, and use `npm run build` with output directory `dist`.
 
-## Credits
+## Notes
 
-Destination photography via [Unsplash](https://unsplash.com/). Fonts via Google Fonts.
-
----
-
-Made as a creative UI, motion design, and front-end engineering exploration.
+The repository retains its original URL (`wandr-3d-travel-experience`) for continuity, but the product concept is now NOVA. This is an original motion-inspired interpretation, not an exact reproduction of Oryzo's proprietary animations or assets.
