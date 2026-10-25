@@ -37,3 +37,5 @@ Import this repository into Vercel, choose **Vite**, and use `npm run build` wit
 ## Notes
 
 The repository retains its original URL (`wandr-3d-travel-experience`) for continuity, but the product concept is now NOVA. This is an original motion-inspired interpretation, not an exact reproduction of Oryzo's proprietary animations or assets.
+
+<!-- Temporary build validation branch. -->
