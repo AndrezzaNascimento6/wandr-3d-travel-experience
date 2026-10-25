@@ -1,39 +1,46 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import { ArrowUpRight, Compass, Heart, MapPin, Sparkles, X } from "lucide-react";
-import Globe from "./Globe";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useSpring, AnimatePresence } from "motion/react";
+import { ArrowDown, ArrowRight, ArrowUpRight, Check, CreditCard, Globe2, LockKeyhole, Menu, Plus, ShieldCheck, Sparkles, X } from "lucide-react";
 
-type Mood = "All" | "Adventure" | "Culture" | "Nature";
-type Destination = { id:string; name:string; country:string; mood:Exclude<Mood,"All">; image:string; color:string; caption:string; };
-const destinations:Destination[] = [
- {id:"japan",name:"Tokyo",country:"Japan",mood:"Culture",image:"https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1200&q=85",color:"#ffc5dc",caption:"Neon nights and endless discoveries."},
- {id:"iceland",name:"Iceland",country:"Iceland",mood:"Nature",image:"https://images.unsplash.com/photo-1476610182048-b716b8518aae?w=1200&q=85",color:"#b8e9d3",caption:"Chase waterfalls, find your wonder."},
- {id:"italy",name:"Amalfi Coast",country:"Italy",mood:"Adventure",image:"https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1200&q=85",color:"#f9d998",caption:"Take the scenic route. Always."},
+const plans = [
+ {name:"NOVA",tag:"THE ESSENTIAL",fee:"$0",desc:"Everything you need. Nothing you don't.",features:["Everyday payments","Instant notifications","Virtual card"]},
+ {name:"NOVA PLUS",tag:"MORE OF EVERYTHING",fee:"$9",desc:"A little extra, for wherever life takes you.",features:["Everything in NOVA","Travel perks","Priority support"]},
+ {name:"NOVA ULTRA",tag:"THE FULL EXPERIENCE",fee:"$19",desc:"For people who never settle for ordinary.",features:["Everything in PLUS","Premium metal card","Exclusive experiences"]}
 ];
-const moods:Mood[]=["All","Adventure","Culture","Nature"];
+function BankCard({variant="purple",small=false}:{variant?:string;small?:boolean}){
+ return <div className={`bank-card ${variant} ${small?"bank-card-small":""}`}><div className="card-top"><span>nova<span className="asterisk">✳</span></span><span className="chip">▦</span></div><div className="card-bottom"><span>GOOD THINGS AHEAD.</span><span className="circles"><i/><i/></span></div></div>;
+}
 export default function App(){
- const [mood,setMood]=useState<Mood>("All");
- const [selected,setSelected]=useState<Destination|null>(null);
- const [saved,setSaved]=useState<string[]>([]);
- const [showSaved,setShowSaved]=useState(false);
- const visible=destinations.filter(d=>mood==="All"||d.mood===mood);
- const toggle=(id:string)=>setSaved(prev=>prev.includes(id)?prev.filter(x=>x!==id):[...prev,id]);
+ const heroRef=useRef<HTMLElement>(null);
+ const storyRef=useRef<HTMLElement>(null);
+ const {scrollYProgress:heroProgress}=useScroll({target:heroRef,offset:["start start","end start"]});
+ const {scrollYProgress:storyProgress}=useScroll({target:storyRef,offset:["start end","end start"]});
+ const smooth=useSpring(heroProgress,{stiffness:90,damping:24});
+ const cardRotate=useTransform(smooth,[0,1],[-16,145]);
+ const cardY=useTransform(smooth,[0,1],[0,300]);
+ const cardScale=useTransform(smooth,[0,1],[1,1.65]);
+ const titleY=useTransform(smooth,[0,1],[0,-130]);
+ const sceneRotate=useTransform(storyProgress,[0,.5,1],[-32,0,28]);
+ const sceneScale=useTransform(storyProgress,[0,.5,1],[.7,1.05,.82]);
+ const [active,setActive]=useState(1);
+ const [color,setColor]=useState("purple");
+ const [menu,setMenu]=useState(false);
+ const [showDemo,setShowDemo]=useState(false);
+ const [amount,setAmount]=useState("50");
+ const [sent,setSent]=useState(false);
+ const [copied,setCopied]=useState(false);
+ const scrollTo=(id:string)=>{document.getElementById(id)?.scrollIntoView({behavior:"smooth"});setMenu(false)};
  return <main>
-  <header className="nav"><a className="logo" href="#" aria-label="WANDR home">wandr<span>✳</span></a><span className="nav-center">THE WORLD IS YOUR PLAYGROUND</span><button className="saved-link" onClick={()=>setShowSaved(true)}><Heart size={17}/> MY LIST <span className="count">{saved.length}</span></button></header>
-  <section className="hero">
-   <div className="hero-copy"><motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="eyebrow"><span className="sun">✺</span> NOT ALL WHO WANDER ARE LOST</motion.div>
-   <motion.h1 initial={{opacity:0,y:35}} animate={{opacity:1,y:0}} transition={{delay:0.12}}>GO<br/><span>SOMEWHERE</span><br/>WILD<span className="period">.</span></motion.h1>
-   <p>Less scrolling. More exploring. Find a place that feels like <em>you.</em></p>
-   <a href="#explore" className="primary">FIND YOUR NEXT ESCAPE <ArrowUpRight size={20}/></a>
-   <div className="tiny-note">✳ MADE FOR THE CURIOUS ONES</div></div>
-   <div className="hero-art"><div className="orbit-label orbit-top">YOUR NEXT ADVENTURE <ArrowUpRight size={15}/></div><div className="globe"><Globe/></div><div className="sticker sticker-orange">LET'S<br/>GO!</div><div className="sticker sticker-purple">EXPLORE<br/>MORE ✷</div><div className="orbit-label orbit-bottom">SPIN THE WORLD ↗</div></div>
-  </section>
-  <section id="explore" className="explore"><div className="section-head"><div><div className="section-kicker"><Sparkles size={17}/> YOUR VIBE, YOUR TRIP</div><h2>WHERE TO <i>NEXT?</i></h2></div><p>Pick your mood. We'll bring the inspiration.</p></div>
-  <div className="filters" role="group" aria-label="Filter destinations">{moods.map(m=><button key={m} className={m===mood?"active":""} onClick={()=>setMood(m)}>{m==="All"?"✳":m==="Adventure"?"↗":m==="Culture"?"◉":"✿"} {m}</button>)}</div>
-  <motion.div layout className="cards"><AnimatePresence mode="popLayout">{visible.map((d,i)=><motion.button layout key={d.id} initial={{opacity:0,scale:.92,y:24}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:.9}} transition={{delay:i*.08}} className="destination" onClick={()=>setSelected(d)} style={{background:d.color}}><div className="card-photo" style={{backgroundImage:`url("${d.image}")`}}/><span className="card-tag">{d.mood.toUpperCase()}</span><div className="card-bottom"><div><span><MapPin size={14}/>{d.country}</span><h3>{d.name}</h3></div><span className="card-arrow"><ArrowUpRight/></span></div></motion.button>)}</AnimatePresence></motion.div>
-  </section>
-  <footer><span>wandr✳</span><span>COLLECT MOMENTS, NOT TABS. © 2026 WANDR — CONCEPT PROJECT</span><Compass size={22}/></footer>
-  <AnimatePresence>{selected&&<motion.div className="overlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setSelected(null)}><motion.article className="detail" initial={{scale:.85,y:70,opacity:0}} animate={{scale:1,y:0,opacity:1}} exit={{scale:.92,y:50,opacity:0}} transition={{type:"spring",damping:24}} onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setSelected(null)} aria-label="Close"><X/></button><img src={selected.image} alt={selected.name}/><div className="detail-copy"><span className="section-kicker">{selected.mood} · {selected.country}</span><h2>{selected.name}</h2><p>{selected.caption}</p><button className="primary" onClick={()=>toggle(selected.id)}><Heart size={18} fill={saved.includes(selected.id)?"currentColor":"none"}/>{saved.includes(selected.id)?"SAVED TO YOUR LIST":"ADD TO MY BUCKET LIST"}</button></div></motion.article></motion.div>}</AnimatePresence>
-  <AnimatePresence>{showSaved&&<motion.div className="overlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setShowSaved(false)}><motion.aside className="drawer" initial={{x:"100%"}} animate={{x:0}} exit={{x:"100%"}} transition={{type:"spring",damping:30}} onClick={e=>e.stopPropagation()}><button className="close" onClick={()=>setShowSaved(false)} aria-label="Close"><X/></button><span className="section-kicker">YOUR LITTLE CORNER OF THE WORLD</span><h2>MY BUCKET LIST ✳</h2>{saved.length===0?<p>No destinations saved yet. Your next adventure is waiting!</p>:destinations.filter(d=>saved.includes(d.id)).map(d=><div className="saved-item" key={d.id}><img src={d.image} alt=""/><div><strong>{d.name}</strong><small>{d.country}</small></div><button onClick={()=>toggle(d.id)} aria-label={`Remove ${d.name}`}><X size={17}/></button></div>)}</motion.aside></motion.div>}</AnimatePresence>
+ <nav className="nav"><a href="#top" className="brand">nova<span>✳</span></a><div className="nav-links"><a href="#experience">Experience</a><a href="#features">Why NOVA</a><a href="#cards">Cards</a></div><button className="nav-cta" onClick={()=>setShowDemo(true)}>TRY THE DEMO <ArrowUpRight size={17}/></button><button className="mobile-menu" aria-label="Open navigation" onClick={()=>setMenu(!menu)}>{menu?<X/>:<Menu/>}</button></nav>
+ <AnimatePresence>{menu&&<motion.div className="mobile-nav" initial={{opacity:0,y:-20}} animate={{opacity:1,y:0}} exit={{opacity:0}}>{[["Experience","experience"],["Why NOVA","features"],["Cards","cards"]].map(([label,id])=><button key={id} onClick={()=>scrollTo(id)}>{label}</button>)}</motion.div>}</AnimatePresence>
+ <section className="hero" id="top" ref={heroRef}><div className="hero-sticky"><div className="hero-grain"/><motion.div style={{y:titleY}} className="hero-heading"><span className="eyebrow">A NEW KIND OF MONEY EXPERIENCE <span>↗</span></span><h1>MAKE<br/>MONEY<br/><em>MOVE.</em></h1><p>Money should move with you. Not the other way around.</p><button className="round-link" onClick={()=>scrollTo("experience")}>DISCOVER NOVA <ArrowDown size={19}/></button></motion.div><motion.div className="hero-card-wrap" style={{rotateY:cardRotate,y:cardY,scale:cardScale}}><BankCard/></motion.div><div className="hero-counter">01 / 04 — SCROLL TO EXPLORE</div><div className="hero-star">✳</div></div></section>
+ <section className="intro" id="experience"><motion.div initial={{opacity:0,y:70}} whileInView={{opacity:1,y:0}} viewport={{once:true,amount:.25}} transition={{duration:.7}}><span className="kicker">/ THE NEXT CHAPTER</span><h2>BANKING<br/>WITHOUT THE<br/><span>BOOOORING.</span></h2><p>Forget everything you know about banking. NOVA makes managing money feel effortless, intuitive, and a little more fun.</p></motion.div><div className="marquee" aria-hidden="true"><div>YOUR MONEY. YOUR RULES. ✳ YOUR MONEY. YOUR RULES. ✳ YOUR MONEY. YOUR RULES. ✳&nbsp;</div></div></section>
+ <section className="showcase" ref={storyRef} id="features"><div className="showcase-sticky"><div className="showcase-copy"><span className="kicker">/ 01 — BUILT DIFFERENT</span><h2>ALL YOUR<br/>MONEY.<br/><i>ONE PLACE.</i></h2><p>One beautiful space for everything you do with your money. Tap, send, save, repeat.</p><button className="text-link" onClick={()=>setShowDemo(true)}>TRY A TRANSFER <ArrowUpRight size={18}/></button></div><motion.div className="phone-stage" style={{rotateY:sceneRotate,scale:sceneScale}}><div className="phone"><div className="phone-island"/><div className="phone-content"><div className="phone-row"><strong>nova✳</strong><span>◉</span></div><small>TOTAL BALANCE</small><h3>$12,480<span>.50</span></h3><div className="phone-actions"><span>↗<small>Send</small></span><span>＋<small>Add</small></span><span>⇄<small>Exchange</small></span></div><div className="phone-chart"><span>YOUR MONEY, IN MOTION</span><div className="bars">{[34,49,43,68,57,82,72,100,79,91].map((h,i)=><i key={i} style={{height:h+"%"}}/>)}</div></div><div className="phone-activity"><b>Recent activity</b><p>↗ &nbsp; Coffee & friends <span>− $12.00</span></p><p>✳ &nbsp; Monthly savings <span>+ $200.00</span></p></div></div></div><div className="floating-pill">✳ INSTANT. ALWAYS.</div></motion.div></div></section>
+ <section className="feature-grid"><article><span>01 / FAST</span><ArrowUpRight/><h3>INSTANT<br/>MEANS INSTANT.</h3><p>Send money in seconds. No waiting, no drama.</p></article><article><span>02 / SAFE</span><ShieldCheck/><h3>YOUR MONEY.<br/>PROTECTED.</h3><p>Smart controls and security built around you.</p></article><article><span>03 / GLOBAL</span><Globe2/><h3>GO BIG.<br/>GO GLOBAL.</h3><p>Made for people who don't stay in one place.</p></article></section>
+ <section className="customize" id="cards"><div className="customize-head"><span className="kicker">/ 02 — MAKE IT YOURS</span><h2>YOUR CARD.<br/><em>YOUR ENERGY.</em></h2><p>Choose a look that feels like you. Your money, your personality.</p></div><div className="customize-body"><motion.div key={color} initial={{opacity:0,rotate:-12,scale:.86}} animate={{opacity:1,rotate:-8,scale:1}} transition={{type:"spring",stiffness:140,damping:18}} className="custom-card"><BankCard variant={color}/></motion.div><div className="custom-options"><span>CHOOSE YOUR COLOR</span><div className="swatches">{["purple","lime","orange","dark"].map(c=><button key={c} className={`swatch ${c} ${color===c?"chosen":""}`} aria-label={`Select ${c} card`} aria-pressed={color===c} onClick={()=>setColor(c)} />)}</div><p>Made to stand out.<br/>Designed to go everywhere.</p><button className="outline-btn" onClick={()=>setShowDemo(true)}>EXPLORE YOUR CARD <ArrowUpRight/></button></div></div></section>
+ <section className="pricing"><span className="kicker">/ 03 — PICK YOUR PATH</span><h2>MORE LIFE.<br/><i>LESS FEES.</i></h2><div className="plan-tabs">{plans.map((p,i)=><button key={p.name} className={active===i?"selected":""} onClick={()=>setActive(i)}>{p.name}</button>)}</div><AnimatePresence mode="wait"><motion.div key={active} className="plan-detail" initial={{opacity:0,y:25}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-15}}><div><span>{plans[active].tag}</span><h3>{plans[active].name}</h3><p>{plans[active].desc}</p></div><div className="plan-price"><strong>{plans[active].fee}</strong><small>/ MONTH · DEMO PRICING</small></div><ul>{plans[active].features.map(f=><li key={f}><Check size={18}/>{f}</li>)}</ul></motion.div></AnimatePresence></section>
+ <section className="closing"><span>READY FOR WHAT'S NEXT?</span><h2>GO BEYOND<br/><i>ORDINARY.</i></h2><button onClick={()=>setShowDemo(true)}>EXPLORE NOVA <ArrowUpRight/></button><div className="closing-orb">✳</div></section>
+ <footer><span className="brand">nova✳</span><p>A FICTIONAL BANKING CONCEPT. NO REAL ACCOUNTS OR TRANSACTIONS.</p><span>© 2026 NOVA — DESIGN EXPERIMENT</span></footer>
+ <AnimatePresence>{showDemo&&<motion.div className="modal-backdrop" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setShowDemo(false)}><motion.div className="modal" initial={{opacity:0,scale:.92,y:30}} animate={{opacity:1,scale:1,y:0}} exit={{opacity:0,scale:.95}} onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>{setShowDemo(false);setSent(false)}} aria-label="Close"><X/></button><span className="kicker">/ INTERACTIVE DEMO</span><h2>MOVE MONEY.<br/><i>JUST LIKE THAT.</i></h2>{sent?<div className="success"><Check size={40}/><h3>Looking good!</h3><p>Demo transfer of ${Number(amount||0).toFixed(2)} completed. No real money was moved.</p><button className="outline-btn" onClick={()=>setSent(false)}>TRY AGAIN <ArrowRight/></button></div>:<form onSubmit={e=>{e.preventDefault();if(Number(amount)>0)setSent(true)}}><label htmlFor="amount">AMOUNT (USD) — DEMO ONLY</label><div className="amount-field"><span>$</span><input id="amount" type="number" min="0.01" step="0.01" required value={amount} onChange={e=>setAmount(e.target.value)}/></div><div className="demo-recipient"><span>↗</span><div><strong>Alex Morgan</strong><small>Demo recipient</small></div><Check size={19}/></div><button className="submit" type="submit">SEND DEMO TRANSFER <ArrowUpRight/></button></form>}<p className="disclaimer"><LockKeyhole size={13}/> Fictional experience. No banking services are provided.</p></motion.div></motion.div>}</AnimatePresence>
  </main>;
 }
