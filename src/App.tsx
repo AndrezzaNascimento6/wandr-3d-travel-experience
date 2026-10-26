@@ -78,7 +78,7 @@ function App(){
  const motionControl=<button type="button" className="motion-toggle" aria-pressed={userReduced} onClick={()=>setUserReduced(v=>!v)}>REDUCE MOTION</button>;
  return <MotionContext.Provider value={userReduced}>
   <a className="skip-link" href="#main-content">Skip to main content</a>
-  <main id="main-content" tabIndex={-1}>
+  <div className="site-shell">
    <motion.div className="scroll-progress" aria-hidden="true" style={{scaleX:scrollYProgress}}/>
    <div inert={open} aria-hidden={open}>
     <header className="top-nav">
@@ -96,12 +96,12 @@ function App(){
       <button type="button" aria-pressed={userReduced} onClick={()=>setUserReduced(v=>!v)}>REDUCE MOTION</button>
      </nav>
     </header>
-    <Hero/><CardReveal/><Security/><Wealth/><World/><Benefits/><MobileApp onExplore={()=>setOpen(true)}/>
-    <section className="end-scene"><div className="end-orbit" aria-hidden="true"/><span>THE NEXT CHAPTER IS YOURS</span><h2>EXPECT<br/><em>EXTRAORDINARY.</em></h2><motion.button type="button" whileHover={calm?undefined:{scale:1.06}} whileTap={calm?undefined:{scale:.96}} onClick={()=>setOpen(true)}>STEP INTO NOVA <ArrowRight size={18} aria-hidden="true"/></motion.button></section>
+    <main id="main-content" tabIndex={-1}><Hero/><CardReveal/><Security/><Wealth/><World/><Benefits/><MobileApp onExplore={()=>setOpen(true)}/>
+    <section className="end-scene"><div className="end-orbit" aria-hidden="true"/><span>THE NEXT CHAPTER IS YOURS</span><h2>EXPECT<br/><em>EXTRAORDINARY.</em></h2><motion.button type="button" whileHover={calm?undefined:{scale:1.06}} whileTap={calm?undefined:{scale:.96}} onClick={()=>setOpen(true)}>STEP INTO NOVA <ArrowRight size={18} aria-hidden="true"/></motion.button></section></main>
     <footer><a className="site-logo" href="#top" aria-label="NOVA — back to top">nova</a><p>FICTIONAL BANKING CONCEPT. NO REAL FINANCIAL SERVICES.</p><span>© 2026 NOVA — DESIGN EXPERIMENT</span></footer>
    </div>
    <AnimatePresence>{open&&<ExperienceModal onClose={()=>setOpen(false)} onNavigate={navigateTo}/>}</AnimatePresence>
-  </main>
+  </div>
  </MotionContext.Provider>
 }
 export default App;
