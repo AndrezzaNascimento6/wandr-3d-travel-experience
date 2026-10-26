@@ -214,3 +214,6 @@ html[data-reduced-motion="true"] .scroll-progress{display:none}
 
 /* Wealth chapter pagination must remain legible on narrow screens. */
 .chapter-wealth .chapter-footer,.chapter-wealth .chapter-footer span{color:#f2f7ff}
+
+/* Stable high contrast for the primary dialog action, including glass overlays. */
+.modal-glass .modal-main-cta{background:#fff0d2!important;color:#071a2d!important}
