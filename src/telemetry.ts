@@ -12,6 +12,7 @@ const sessionId=crypto.randomUUID();
 const started=performance.now();
 let enabled=false;
 let finished=false;
+let startedSent=false;
 const deviceType=()=>window.innerWidth<620?"mobile":window.innerWidth<900?"tablet":"desktop";
 
 function storeLocally(record:NovaRecord){
@@ -23,11 +24,11 @@ export function consentValue():boolean|null{
 export function setAnalyticsConsent(value:boolean){
  enabled=value;
  try{localStorage.setItem(KEY,value?"yes":"no");if(!value)localStorage.removeItem(LOCAL)}catch{/* Storage unavailable */}
- if(value){finished=false;trackNova("visit_started","hero")}
+ if(value){finished=false;if(!startedSent){startedSent=true;trackNova("visit_started","hero")}}
 }
 export function initNovaTelemetry(){
  enabled=consentValue()===true;
- if(enabled)trackNova("visit_started","hero");
+ if(enabled&&!startedSent){startedSent=true;trackNova("visit_started","hero")}
  const finish=()=>{if(enabled&&!finished){finished=true;trackNova("visit_ended",null,performance.now()-started)}};
  window.addEventListener("pagehide",finish);
  return ()=>window.removeEventListener("pagehide",finish);
