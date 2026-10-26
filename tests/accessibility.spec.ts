@@ -61,3 +61,71 @@ test("demo transfer form passes automated accessibility checks",async({page})=>{
  const result=await new AxeBuilder({page}).include(".phone-frame").withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa","wcag22aa"]).analyze();
  expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
 });
+
+
+/**
+ * Reflow equivalence checks: WCAG 1.4.10 specifies a 320-CSS-pixel
+ * viewport (typical effective width at 400% browser zoom starting
+ * from 1280 CSS pixels). These tests emulate the effective viewport,
+ * not a physical assistive-technology or browser toolbar zoom session.
+ */
+for (const zoom of [
+ {scale:"200%",width:640,height:800},
+ {scale:"400%",width:320,height:800}
+]) {
+ test("reflow at "+zoom.scale+" equivalent effective width ("+zoom.width+"px)",async({page})=>{
+  await page.setViewportSize({width:zoom.width,height:zoom.height});
+  await page.goto("/");
+  await expect(page.getByRole("heading",{level:1})).toBeVisible();
+  const horizontalOverflow=await page.evaluate(()=>({
+   total:document.documentElement.scrollWidth,
+   visible:document.documentElement.clientWidth
+  }));
+  expect(horizontalOverflow.total,"Page should not require horizontal scrolling").toBeLessThanOrEqual(horizontalOverflow.visible+1);
+  const headings=await page.locator(".nova-hero h1,.benefits h2,.end-scene h2").evaluateAll(elements=>elements.map(el=>{
+   const rect=el.getBoundingClientRect();
+   const parent=el.parentElement!.getBoundingClientRect();
+   return {text:el.textContent?.trim(),left:rect.left,right:rect.right,parentLeft:parent.left,parentRight:parent.right};
+  }));
+  for(const item of headings){
+   expect(item.left,item.text+" should not start outside its container").toBeGreaterThanOrEqual(item.parentLeft-2);
+   expect(item.right,item.text+" should not end outside its container").toBeLessThanOrEqual(item.parentRight+2);
+  }
+  const menu=page.getByRole("button",{name:"MENU"});
+  await expect(menu).toBeVisible();
+  await menu.click();
+  await expect(page.getByRole("navigation",{name:"Mobile navigation"})).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("navigation",{name:"Mobile navigation"})).toBeHidden();
+ });
+}
+
+test("keyboard skip link enters the main content",async({page})=>{
+ await page.goto("/");
+ await page.keyboard.press("Tab");
+ await expect(page.getByRole("link",{name:"Skip to main content"})).toBeFocused();
+ await page.keyboard.press("Enter");
+ await expect(page.locator("#main-content")).toBeFocused();
+});
+
+test("reduced motion works at narrow 400%-equivalent viewport",async({page})=>{
+ await page.setViewportSize({width:320,height:800});
+ await page.emulateMedia({reducedMotion:"reduce"});
+ await page.goto("/");
+ await expect(page.getByRole("heading",{level:1})).toBeVisible();
+ const sizing=await page.locator(".chapter-card").evaluate(el=>({height:el.getBoundingClientRect().height,viewport:window.innerHeight}));
+ expect(sizing.height).toBeLessThan(1500);
+ await expect(page.locator(".reveal-text h2")).toHaveCSS("opacity","1");
+});
+
+test("text resize to 200% does not hide major interactions",async({page})=>{
+ await page.setViewportSize({width:1280,height:900});
+ await page.goto("/");
+ await page.evaluate(()=>{document.documentElement.style.fontSize="200%"});
+ const launcher=page.getByRole("button",{name:/EXPLORE NOVA/i});
+ await expect(launcher).toBeVisible();
+ await launcher.click();
+ await expect(page.getByRole("dialog")).toBeVisible();
+ await page.keyboard.press("Escape");
+ await expect(page.getByRole("dialog")).toHaveCount(0);
+});
