@@ -44,3 +44,19 @@ test("manual motion switch persists and disabled scroll animation remains readab
  await expect(page.locator("html")).toHaveAttribute("data-reduced-motion","true");
  await expect(page.getByRole("heading",{name:/NOT MADE/i})).toBeVisible();
 });
+
+test("onboarding dialog passes automated accessibility checks",async({page})=>{
+ await page.goto("/");
+ await page.getByRole("button",{name:/EXPLORE NOVA/i}).click();
+ await expect(page.getByRole("dialog")).toBeVisible();
+ const result=await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa","wcag22aa"]).analyze();
+ expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+});
+test("demo transfer form passes automated accessibility checks",async({page})=>{
+ await page.goto("/");
+ const phone=page.getByRole("region",{name:/interactive fictional banking/i});
+ await phone.getByRole("button",{name:"SEND",exact:true}).click();
+ await expect(phone.getByRole("heading",{name:/One quick move/i})).toBeVisible();
+ const result=await new AxeBuilder({page}).include(".phone-frame").withTags(["wcag2a","wcag2aa","wcag21a","wcag21aa","wcag22aa"]).analyze();
+ expect(result.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+});
