@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import {createClient} from "@supabase/supabase-js";
 
 export type NovaEventName = "visit_started"|"section_viewed"|"nav_clicked"|"modal_opened"|"modal_route_selected"|"benefit_opened"|"motion_preference_changed"|"app_tab_opened"|"demo_transfer_completed"|"demo_topup"|"card_status_changed"|"visit_ended";
