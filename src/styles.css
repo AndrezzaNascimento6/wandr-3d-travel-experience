@@ -211,3 +211,6 @@ html[data-reduced-motion="true"] .scroll-progress{display:none}
  html[data-reduced-motion="true"] .chapter .finance-panel{top:50%;left:6%;right:auto;width:88vw}
  html[data-reduced-motion="true"] .chapter .globe-position{top:52%;width:88vw}
 }
+
+/* Wealth chapter pagination must remain legible on narrow screens. */
+.chapter-wealth .chapter-footer,.chapter-wealth .chapter-footer span{color:#f2f7ff}
