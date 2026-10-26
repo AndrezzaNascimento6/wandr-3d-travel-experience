@@ -24,6 +24,7 @@ export function consentValue():boolean|null{
 }
 export function setAnalyticsConsent(value:boolean){
  enabled=value;
+ if(!value){startedSent=false;finished=false}
  try{localStorage.setItem(KEY,value?"yes":"no");if(!value)localStorage.removeItem(LOCAL)}catch{/* Storage unavailable */}
  if(value){finished=false;if(!startedSent){startedSent=true;trackNova("visit_started","hero")}}
 }
