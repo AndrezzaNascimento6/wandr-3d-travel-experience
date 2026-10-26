@@ -225,3 +225,5 @@ html[data-reduced-motion="true"] .scroll-progress{display:none}
 .analytics-consent button:last-child{background:#e4cba3;color:#0a233b}
 .analytics-consent button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(max-width:620px){.analytics-consent{left:10px;right:10px;bottom:10px;padding:16px}.analytics-consent p{font-size:12px}}
+
+footer .analytics-settings{background:none;border:1px solid #7894af83;border-radius:7px;color:#cfdded;font-size:10px;font-weight:700;letter-spacing:.1em;min-height:44px;padding:10px 15px}
