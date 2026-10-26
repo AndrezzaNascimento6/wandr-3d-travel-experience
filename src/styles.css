@@ -115,3 +115,99 @@ footer{background:#020a16;display:flex;align-items:center;justify-content:space-
   }
   .benefits .benefit-grid .benefit:after{border-radius:24px}
 }
+
+
+/* Accessibility: landmarks, keyboard focus, touch controls and readable text */
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;clip-path:inset(50%)!important}
+.skip-link{position:fixed;z-index:250;top:12px;left:12px;background:#f3ead9;color:#092037;border:2px solid #172f46;border-radius:12px;padding:14px 20px;font-size:15px;font-weight:800;transform:translateY(-200%);transition:transform .15s}
+.skip-link:focus-visible{transform:translateY(0)}
+:where(button,a,input):focus-visible{outline:3px solid #f1cb88;outline-offset:4px}
+.phone-inner :where(button,input):focus-visible{outline:3px solid #165e91;outline-offset:3px}
+.top-nav .nav-actions{display:flex;align-items:center;gap:12px}
+.top-nav .motion-toggle{border-color:#a1bcd0a6;white-space:nowrap}
+.top-nav .motion-toggle[aria-pressed="true"],.mobile-nav button[aria-pressed="true"]{background:#e4cba3;color:#092038;border-color:#e4cba3}
+.top-nav .menu-toggle{display:none}
+.top-nav [hidden]{display:none!important}
+.top-nav .mobile-nav{display:none}
+.benefits button.benefit:focus-visible{border-color:#fff;box-shadow:0 0 0 4px #d6bb8c,0 30px 50px #1236}
+.benefits button.benefit:focus-visible .benefit-information p{opacity:1;transform:none;max-height:180px;margin-bottom:12px}
+.phone-hello,.phone-overline{color:#3d5b71;font-size:12px}
+.phone-topbar .demo-pill{font-size:11px}
+.phone-home h3 em,.phone-activity h3 em,.phone-cards h3 em{color:#476782}
+.balance-box>span{color:#e0eef6;font-size:11px}
+.balance-box>small{color:#d3e2ee;font-size:11px}
+.balance-box>span button{min-height:28px;min-width:28px;align-items:center;justify-content:center}
+.quick-actions button,.phone-section-title button{color:#163a5a;font-size:11px;min-height:44px}
+.transaction-row>div small{color:#445e71;font-size:11px}
+.phone-tabbar button{color:#3d586a;font-size:11px;min-width:56px;min-height:45px}
+.phone-activity .activity-total{color:#345368;font-size:11px}
+.phone-transfer>label{color:#385b74;font-size:12px}
+.phone-back{color:#28506e;font-size:12px;min-height:36px}
+.phone-toast{color:#1f523b;font-size:12px}
+.app-copy>small{color:#d2e0e9;font-size:11px}
+.modal-eyebrow,.modal-note{color:#e0e9f2}
+.modal-note{font-size:11px}
+.modal-glass .modal-close{min-width:44px;min-height:44px}
+.journey-text small{color:#dce8f1;font-size:12px}
+.journey-option{min-height:64px}
+.benefits>p{color:#385268}
+.phone-frame{max-width:100%}
+@media(max-width:900px){
+ .top-nav .desktop-links{display:none}
+ .top-nav .menu-toggle{display:inline-flex;min-height:44px;min-width:65px;justify-content:center}
+ .top-nav .nav-actions>.motion-toggle{display:none}
+ .top-nav .mobile-nav{display:flex;flex-direction:column;gap:0;position:absolute;top:100%;left:0;right:0;background:#071a30f5;border:1px solid #abc8dc55;box-shadow:0 25px 65px #0009;padding:14px 6% 24px;font-size:13px;letter-spacing:.08em}
+ .top-nav .mobile-nav>a,.top-nav .mobile-nav>button{min-height:48px;padding:14px 10px;color:#f7faff;text-align:left;border-bottom:1px solid #ffffff26;display:flex;align-items:center}
+ .top-nav .mobile-nav>button{background:transparent;border-left:0;border-right:0;border-top:0;font-weight:700}
+ .top-nav .mobile-nav>button[aria-pressed="true"]{color:#fbe1b7;background:#143650}
+}
+@media(max-width:620px){
+ .top-nav .nav-actions{gap:6px}
+ .top-nav .explore-cta{padding:11px 12px;font-size:9px;gap:7px;min-height:44px}
+ .top-nav .menu-toggle{padding:10px;min-width:54px;font-size:10px}
+ .phone-frame{width:min(365px,90vw)}
+ .phone-inner{padding:21px 14px 12px}
+ .phone-home>h3,.phone-activity>h3,.phone-cards>h3,.phone-transfer>h3{font-size:clamp(24px,8vw,29px)}
+ .balance-box>strong{font-size:clamp(24px,7vw,32px)}
+ .phone-tabbar{gap:3px}
+ .phone-tabbar button{font-size:10px;min-width:0}
+ .chapter .reveal-text h2,.chapter .security-copy h2,.chapter .wealth-copy h2,.chapter .world-copy h2{font-size:clamp(40px,11.5vw,64px)}
+ .end-scene h2{font-size:clamp(44px,12vw,88px)}
+}
+@media(max-width:370px){
+ .top-nav .explore-cta{display:none}
+ .phone-inner{padding-inline:11px}
+ .quick-actions button span{width:48px;height:48px}
+}
+/* Respect OS reduced-motion settings and the visitor's explicit choice.
+   React also stops scroll-dependent transforms in calm mode. */
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto!important}
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+ .chapter,.chapter.chapter-card,.chapter.chapter-security,.chapter.chapter-wealth,.chapter.chapter-world{height:auto!important}
+ .chapter .pinned{position:relative!important;height:auto!important;min-height:780px;overflow:hidden}
+ .reveal-text,.security-confirm{opacity:1!important}
+ .globe-position{left:50%!important}
+ .scroll-progress{display:none}
+}
+html[data-reduced-motion="true"]{scroll-behavior:auto!important}
+html[data-reduced-motion="true"] *,html[data-reduced-motion="true"] *::before,html[data-reduced-motion="true"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+html[data-reduced-motion="true"] .chapter{height:auto!important}
+html[data-reduced-motion="true"] .chapter .pinned{position:relative!important;height:auto!important;min-height:780px;overflow:hidden}
+html[data-reduced-motion="true"] .reveal-text,html[data-reduced-motion="true"] .security-confirm{opacity:1!important}
+html[data-reduced-motion="true"] .globe-position{left:50%!important}
+html[data-reduced-motion="true"] .scroll-progress{display:none}
+@media(max-width:620px) and (prefers-reduced-motion:reduce){
+ .chapter .pinned{min-height:920px}
+ .chapter .reveal-object{top:58%;left:10%;width:82vw}
+ .chapter .vault{top:49%;right:9%;width:80vw}
+ .chapter .finance-panel{top:50%;left:6%;right:auto;width:88vw}
+ .chapter .globe-position{top:52%;width:88vw}
+}
+@media(max-width:620px){
+ html[data-reduced-motion="true"] .chapter .pinned{min-height:920px}
+ html[data-reduced-motion="true"] .chapter .reveal-object{top:58%;left:10%;width:82vw}
+ html[data-reduced-motion="true"] .chapter .vault{top:49%;right:9%;width:80vw}
+ html[data-reduced-motion="true"] .chapter .finance-panel{top:50%;left:6%;right:auto;width:88vw}
+ html[data-reduced-motion="true"] .chapter .globe-position{top:52%;width:88vw}
+}
