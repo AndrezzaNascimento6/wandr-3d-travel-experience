@@ -38,3 +38,80 @@ footer{background:#020a16;display:flex;align-items:center;justify-content:space-
 @media(max-width:900px){.mobile-experience{grid-template-columns:1fr;gap:70px;padding:110px 7%}.app-copy h2{font-size:clamp(63px,10vw,105px)}.app-copy>p{max-width:600px}.phone-frame{transform:none}.globe-position{top:46%;width:60vw}}
 @media(max-width:620px){.intro-curtain>span{font-size:9px;padding:0 20px}.globe-position{top:55%;width:87vw}.benefits button.benefit{min-height:360px}.benefit-information p{max-height:110px;opacity:.82;transform:none;margin-bottom:10px}.benefit-information .benefit-arrow{width:40px;height:40px}.mobile-experience{padding:100px 7%;gap:55px}.app-copy h2{font-size:clamp(54px,12vw,82px)}.app-copy>p{font-size:15px}.app-feature-row{gap:15px}.app-feature-row span{font-size:9px}.phone-stage{width:100%}.phone-halo{width:90vw}.phone-frame{width:min(365px,88vw);height:720px;padding:9px;border-radius:51px}.phone-inner{border-radius:41px}.phone-home>h3,.phone-activity>h3,.phone-cards>h3,.phone-transfer>h3{font-size:29px}.modal-glass{border-radius:26px;max-height:90dvh;overflow:auto}.modal-body{padding:54px 23px 28px}.modal-glass h2{font-size:clamp(48px,12vw,64px)}.modal-glass .modal-close{top:15px;right:15px;width:35px;height:35px}.modal-eyebrow{font-size:8px}.journey-option{padding:11px}.journey-text strong{font-size:10px}.journey-text small{font-size:10px}.modal-note{font-size:8px}}
 @media(prefers-reduced-motion:reduce){.hero-enter span{animation:none}.benefit-information p{transition:none}.benefits button.benefit{transition:none}}
+
+
+/* Refinement: frosted benefit cards + fully viewable scroll chapters */
+.benefits{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 7% 72%,rgba(119,165,193,.48) 0%,transparent 42%),
+    radial-gradient(circle at 92% 24%,rgba(194,177,154,.38) 0%,transparent 39%),
+    linear-gradient(130deg,#e1e9ee 0%,#f0f0ed 52%,#d4e0e8 100%);
+}
+.benefits::before,.benefits::after{
+  content:"";position:absolute;pointer-events:none;z-index:0;
+  border-radius:50%;filter:blur(6px);
+}
+.benefits::before{
+  width:46vw;height:46vw;left:-14%;bottom:1%;
+  background:radial-gradient(circle,rgba(85,145,186,.36),transparent 65%);
+}
+.benefits::after{
+  width:36vw;height:36vw;right:-10%;top:3%;
+  background:radial-gradient(circle,rgba(205,177,136,.40),transparent 65%);
+}
+.benefits>.section-tag,.benefits>h2,.benefits>p{position:relative;z-index:1}
+.benefits .benefit-grid{position:relative;z-index:2}
+.benefits .benefit-grid .benefit{
+  border-radius:30px;
+  border:1px solid rgba(255,255,255,.72);
+  -webkit-backdrop-filter:blur(26px) saturate(155%);
+  backdrop-filter:blur(26px) saturate(155%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.47),inset 0 -1px 0 rgba(255,255,255,.1),12px 25px 55px rgba(17,40,67,.2);
+  overflow:hidden;
+}
+.benefits .benefit-grid .benefit.travel{
+  background:linear-gradient(142deg,rgba(28,73,111,.83),rgba(17,45,76,.68) 56%,rgba(6,30,53,.81));
+}
+.benefits .benefit-grid .benefit.lifestyle{
+  background:linear-gradient(142deg,rgba(94,106,112,.75),rgba(53,71,89,.76) 56%,rgba(24,43,63,.82));
+}
+.benefits .benefit-grid .benefit.care{
+  background:linear-gradient(142deg,rgba(46,107,116,.74),rgba(25,75,92,.74) 56%,rgba(6,43,65,.85));
+}
+.benefits .benefit-grid .benefit:after{
+  content:"";
+  position:absolute;inset:1px;
+  border-radius:29px;
+  border:1px solid rgba(255,255,255,.22);
+  pointer-events:none;
+}
+.benefits .benefit-grid .benefit:hover,
+.benefits .benefit-grid .benefit.is-active{
+  border-color:rgba(255,255,255,.98);
+  box-shadow:inset 0 1px 0 #ffffffa8,0 36px 80px rgba(16,44,75,.34);
+}
+.benefits .benefit .benefit-symbol{color:rgba(241,247,255,.27)}
+.benefits .benefit:hover .benefit-symbol,
+.benefits .benefit.is-active .benefit-symbol{color:rgba(241,247,255,.68)}
+.benefits .benefit-gesture{display:none}
+
+@media (max-width:620px){
+  /* 3 viewports per chapter: roughly 2 of scroll animation + 1 full-screen
+     sticky stage. Keyframes finish around 70–75% so each scene has time
+     to settle before the following chapter replaces it. */
+  .chapter,
+  .chapter.chapter-card,
+  .chapter.chapter-security,
+  .chapter.chapter-wealth,
+  .chapter.chapter-world{height:300svh}
+  .pinned{height:100svh}
+  .chapter .chapter-footer{bottom:5%}
+  .benefits .benefit-grid .benefit{
+    border-radius:25px;
+    -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(20px);
+  }
+  .benefits .benefit-grid .benefit:after{border-radius:24px}
+}
