@@ -1,5 +1,7 @@
 # NOVA — The Art of More
 
+> This is an independent educational design experiment. NOVA is a fictional banking concept. No real financial transactions are performed.
+
 A fictional premium digital banking concept and cinematic, scroll-directed web experience. Built to explore motion design, interactive UX, and creative front-end engineering.
 
 ## Experience
