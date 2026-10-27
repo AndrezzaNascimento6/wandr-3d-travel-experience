@@ -31,11 +31,21 @@ async function flushPendingEvents(){
   const delivered=new Set<string>(JSON.parse(localStorage.getItem(DELIVERED)||"[]") as string[]);
   let failed=false;
   for(const event of all.filter(item=>!delivered.has(item.id)).slice(0,30)){
-   const {error}=await db.from("nova_events").insert(event);
-   if(error&&error.code!=="23505"){
+   const {data,error}=await db.rpc("nova_record_event",{
+    p_id:event.id,
+    p_session_id:event.session_id,
+    p_event_name:event.event_name,
+    p_section:event.section,
+    p_device_type:event.device_type,
+    p_duration_ms:event.duration_ms
+   });
+   if(error){
     console.warn("NOVA analytics sync pending:",error.message);
     failed=true;break;
    }
+   // False means the anonymous portfolio demo exceeded a defensive cap.
+   // Do not endlessly retry a rejected event.
+   if(data===false)console.info("NOVA analytics event skipped (demo quota or validation).");
    delivered.add(event.id);
   }
   localStorage.setItem(DELIVERED,JSON.stringify([...delivered].slice(-250)));
