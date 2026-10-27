@@ -60,3 +60,13 @@ npm run test:a11y
 
 **Manual validation is still required** before any conformance claim: NVDA + Firefox/Chrome (Windows), VoiceOver + Safari (macOS/iOS), TalkBack + Chrome (Android), 200–400% zoom, keyboard-only operation, landscape mode, and device-level reduced-motion settings. Automated axe and Playwright checks do not certify full WCAG conformance.
 
+
+## NOVA × SIGNAL analytics experiment
+
+A separate [SIGNAL Product Intelligence dashboard](https://github.com/AndrezzaNascimento6/ux-product-analytics-ai) studies this NOVA design experience.
+
+Visitors are offered an optional, accessible analytics-consent choice. Tracking is disabled before consent and after decline. With permission, NOVA records random pseudonymous session IDs, section views, navigation and benefit actions, reduced-motion-control interactions, and **simulated** banking actions. Typed values, balances, transfer amounts, names and emails are not included in events. Consent choice is stored in localStorage.
+
+This demo can send events to a Supabase `nova_events` table when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are defined at build time. Both NOVA and SIGNAL must share the same public Supabase URL/key. See the SIGNAL repo's `supabase/nova_schema.sql` and README for setup and security limitations. Without Supabase, opted-in events are stored only in NOVA's own browser localStorage and cannot appear on SIGNAL across origins.
+
+**Important:** No real user study, conversion funnel to paying customers or real financial service is implemented. Only a clearly disclosed fictional portfolio experiment.

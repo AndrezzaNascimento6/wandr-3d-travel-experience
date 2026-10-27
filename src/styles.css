@@ -217,3 +217,13 @@ html[data-reduced-motion="true"] .scroll-progress{display:none}
 
 /* Stable high contrast for the primary dialog action, including glass overlays. */
 .modal-glass .modal-main-cta{background:#fff0d2!important;color:#071a2d!important}
+
+/* Consent-first UX study: minimal overlay, no redesign of cinematic experience */
+.analytics-consent{position:fixed;z-index:95;bottom:18px;left:18px;right:18px;max-width:470px;padding:21px 23px;border:1px solid #d4c4a0;background:#0a2137f2;box-shadow:0 18px 60px #0009;border-radius:15px;color:#eef5fa;backdrop-filter:blur(18px)}
+.analytics-consent strong{font-size:15px;line-height:1.4}.analytics-consent p{font:400 12px/1.65 "DM Sans",sans-serif;color:#d2dfed;margin:9px 0 18px;letter-spacing:0}
+.analytics-consent>div{display:flex;flex-wrap:wrap;gap:10px}.analytics-consent button{min-height:44px;border-radius:8px;padding:10px 15px;border:1px solid #cfb991;background:transparent;color:#f5e6c6;font-size:11px;font-weight:800;letter-spacing:.06em}
+.analytics-consent button:last-child{background:#e4cba3;color:#0a233b}
+.analytics-consent button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(max-width:620px){.analytics-consent{left:10px;right:10px;bottom:10px;padding:16px}.analytics-consent p{font-size:12px}}
+
+footer .analytics-settings{background:none;border:1px solid #7894af83;border-radius:7px;color:#cfdded;font-size:10px;font-weight:700;letter-spacing:.1em;min-height:44px;padding:10px 15px}
