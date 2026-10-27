@@ -227,3 +227,7 @@ html[data-reduced-motion="true"] .scroll-progress{display:none}
 @media(max-width:620px){.analytics-consent{left:10px;right:10px;bottom:10px;padding:16px}.analytics-consent p{font-size:12px}}
 
 footer .analytics-settings{background:none;border:1px solid #7894af83;border-radius:7px;color:#cfdded;font-size:10px;font-weight:700;letter-spacing:.1em;min-height:44px;padding:10px 15px}
+
+/* Clear and unobtrusive educational-use statement. */
+footer .project-disclaimer{max-width:390px;flex:1 1 250px;margin:0;font-size:11px;letter-spacing:.025em;line-height:1.65;color:#cad5e1}
+@media(max-width:720px){footer .project-disclaimer{flex-basis:100%;order:2}}
