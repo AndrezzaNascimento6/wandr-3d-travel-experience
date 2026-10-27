@@ -67,6 +67,10 @@ A separate [SIGNAL Product Intelligence dashboard](https://github.com/AndrezzaNa
 
 Visitors are offered an optional, accessible analytics-consent choice. Tracking is disabled before consent and after decline. With permission, NOVA records random pseudonymous session IDs, section views, navigation and benefit actions, reduced-motion-control interactions, and **simulated** banking actions. Typed values, balances, transfer amounts, names and emails are not included in events. Consent choice is stored in localStorage.
 
-This demo can send events to a Supabase `nova_events` table when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are defined at build time. Both NOVA and SIGNAL must share the same public Supabase URL/key. See the SIGNAL repo's `supabase/nova_schema.sql` and README for setup and security limitations. Without Supabase, opted-in events are stored only in NOVA's own browser localStorage and cannot appear on SIGNAL across origins.
+This demo can send events to a Supabase `nova_events` table when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are defined at build time. Both NOVA and SIGNAL must share the same public Supabase URL/key. The browser sends validated events through the `nova_record_event` Supabase RPC. No anonymous user can read raw session rows once the secure [SIGNAL migration](https://github.com/AndrezzaNascimento6/ux-product-analytics-ai/blob/main/supabase/security_hardening.sql) has been applied. SIGNAL receives aggregated metrics through `signal_public_summary`, never individual event logs. The publishable/anon key is intentionally public; never use a service-role key in Vite. Without Supabase, opted-in events are stored only in NOVA's own browser localStorage and cannot appear on SIGNAL across origins.
 
 **Important:** No real user study, conversion funnel to paying customers or real financial service is implemented. Only a clearly disclosed fictional portfolio experiment.
+
+## Browser security
+
+Vercel response headers enforce a Content Security Policy, anti-framing controls, no-referrer, no-sniff and restrictive browser permissions. Third-party font fetching (Google Fonts) remains an ordinary network request; third-party hosts may process network metadata such as IP addresses independently of analytics. This site does not display your home IP or store IPs in analytics event fields.
